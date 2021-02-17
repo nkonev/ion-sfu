@@ -8,6 +8,7 @@ import (
 	"net/http"
 	_ "net/http/pprof"
 	"os"
+	"unsafe"
 
 	"github.com/gorilla/websocket"
 	log "github.com/pion/ion-log"
@@ -114,6 +115,11 @@ func startMetrics(addr string) {
 	}
 }
 
+type ExtendedPeer struct {
+	sfu.Peer
+	Name string
+}
+
 func main() {
 	if !parse() {
 		showHelp()
@@ -145,11 +151,24 @@ func main() {
 		}
 		defer c.Close()
 
-		p := server.NewJSONSignal(sfu.NewPeer(s))
+		user := r.URL.Query().Get("user")
+		log.Infof("Connected %v", user)
+		var extendedPeer ExtendedPeer = ExtendedPeer{*sfu.NewPeer(s), user}
+		var convertedSfuPointer *sfu.Peer = (*sfu.Peer)(unsafe.Pointer(&extendedPeer))
+		p := server.NewJSONSignal(convertedSfuPointer)
 		defer p.Close()
 
 		jc := jsonrpc2.NewConn(r.Context(), websocketjsonrpc2.NewObjectStream(c), p)
 		<-jc.DisconnectNotify()
+	}))
+
+	http.Handle("/users", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sessionId := r.URL.Query().Get("session")
+		session, _ := s.GetSession(sessionId)
+		for _, peer := range session.Peers() {
+			var extendedPeer *ExtendedPeer = (*ExtendedPeer)(unsafe.Pointer(peer))
+			log.Infof("Peer %v %v", extendedPeer.Name, extendedPeer.Publisher().GetRouter().ID())
+		}
 	}))
 
 	go startMetrics(metricsAddr)
