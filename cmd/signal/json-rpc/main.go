@@ -2,14 +2,9 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
-	"net"
-	"net/http"
-	_ "net/http/pprof"
-	"os"
-	"unsafe"
-
 	"github.com/gorilla/websocket"
 	log "github.com/pion/ion-log"
 	"github.com/pion/ion-sfu/cmd/signal/json-rpc/server"
@@ -19,6 +14,10 @@ import (
 	"github.com/sourcegraph/jsonrpc2"
 	websocketjsonrpc2 "github.com/sourcegraph/jsonrpc2/websocket"
 	"github.com/spf13/viper"
+	"net"
+	"net/http"
+	_ "net/http/pprof"
+	"os"
 )
 
 var (
@@ -115,9 +114,10 @@ func startMetrics(addr string) {
 	}
 }
 
-type ExtendedPeer struct {
-	sfu.Peer
-	Name string
+type UserSession struct {
+	Id string `json:"id"`
+	Metadata string `json:"metadata"`
+	StreamId string `json:"streamId"`
 }
 
 func main() {
@@ -151,11 +151,8 @@ func main() {
 		}
 		defer c.Close()
 
-		user := r.URL.Query().Get("user")
-		log.Infof("Connected %v", user)
-		var extendedPeer ExtendedPeer = ExtendedPeer{*sfu.NewPeer(s), user}
-		var convertedSfuPointer *sfu.Peer = (*sfu.Peer)(unsafe.Pointer(&extendedPeer))
-		p := server.NewJSONSignal(convertedSfuPointer)
+		metadata := r.URL.Query().Get("metadata")
+		p := server.NewJSONSignal(sfu.NewPeer(s, metadata))
 		defer p.Close()
 
 		jc := jsonrpc2.NewConn(r.Context(), websocketjsonrpc2.NewObjectStream(c), p)
@@ -165,9 +162,16 @@ func main() {
 	http.Handle("/users", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		sessionId := r.URL.Query().Get("session")
 		session, _ := s.GetSession(sessionId)
+		arr := []UserSession{}
 		for _, peer := range session.Peers() {
-			var extendedPeer *ExtendedPeer = (*ExtendedPeer)(unsafe.Pointer(peer))
-			log.Infof("Peer %v %v", extendedPeer.Name, extendedPeer.Publisher().GetRouter().ID())
+			log.Debugf("Peer %v %v %v", peer.GetMetadata(), peer.GetId(), peer.GetStreamId())
+			arr = append(arr, UserSession{Id: peer.GetId(), StreamId: peer.GetStreamId(), Metadata: peer.GetMetadata()})
+		}
+		if marshal, err := json.Marshal(arr); err != nil {
+			log.Errorf("Error during marshalling")
+			w.WriteHeader(500)
+		} else {
+			w.Write(marshal)
 		}
 	}))
 

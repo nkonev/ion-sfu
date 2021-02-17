@@ -11,6 +11,7 @@ import (
 type Publisher struct {
 	id string
 	pc *webrtc.PeerConnection
+	streamId string
 
 	router     Router
 	session    *Session
@@ -46,6 +47,7 @@ func NewPublisher(session *Session, id string, cfg WebRTCTransportConfig) (*Publ
 
 	pc.OnTrack(func(track *webrtc.TrackRemote, receiver *webrtc.RTPReceiver) {
 		log.Debugf("Peer %s got remote track id: %s mediaSSRC: %d rid :%s streamID: %s", p.id, track.ID(), track.SSRC(), track.RID(), track.StreamID())
+		p.streamId = track.StreamID()
 		if r, pub := p.router.AddReceiver(receiver, track); pub {
 			p.session.Publish(p.router, r)
 		}
@@ -134,4 +136,8 @@ func (p *Publisher) AddICECandidate(candidate webrtc.ICECandidateInit) error {
 	}
 	p.candidates = append(p.candidates, candidate)
 	return nil
+}
+
+func (p *Publisher) GetStreamId() string {
+	return p.streamId
 }

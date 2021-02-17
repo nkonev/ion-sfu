@@ -15,6 +15,7 @@ import (
 type Join struct {
 	Sid   string                    `json:"sid"`
 	Offer webrtc.SessionDescription `json:"offer"`
+	Metadata string                 `json:"metadata"`
 }
 
 // Negotiation message sent when renegotiating the peer connection
@@ -70,7 +71,7 @@ func (p *JSONSignal) Handle(ctx context.Context, conn *jsonrpc2.Conn, req *jsonr
 			}
 		}
 
-		answer, err := p.Join(join.Sid, join.Offer)
+		answer, err := p.Join(join.Sid, join.Offer, join.Metadata)
 		if err != nil {
 			replyError(err)
 			break
