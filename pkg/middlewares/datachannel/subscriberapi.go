@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/pion/ion-sfu/pkg/sfu"
+	"github.com/nkonev/ion-sfu/pkg/sfu"
 	"github.com/pion/webrtc/v3"
 )
 

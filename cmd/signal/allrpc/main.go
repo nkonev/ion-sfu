@@ -6,8 +6,8 @@ import (
 	"os"
 
 	log "github.com/pion/ion-log"
-	"github.com/pion/ion-sfu/cmd/signal/allrpc/server"
-	"github.com/pion/ion-sfu/pkg/sfu"
+	"github.com/nkonev/ion-sfu/cmd/signal/allrpc/server"
+	"github.com/nkonev/ion-sfu/pkg/sfu"
 	"github.com/spf13/viper"
 )
 

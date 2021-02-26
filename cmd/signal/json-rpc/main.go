@@ -11,9 +11,9 @@ import (
 
 	"github.com/gorilla/websocket"
 	log "github.com/pion/ion-log"
-	"github.com/pion/ion-sfu/cmd/signal/json-rpc/server"
-	"github.com/pion/ion-sfu/pkg/middlewares/datachannel"
-	"github.com/pion/ion-sfu/pkg/sfu"
+	"github.com/nkonev/ion-sfu/cmd/signal/json-rpc/server"
+	"github.com/nkonev/ion-sfu/pkg/middlewares/datachannel"
+	"github.com/nkonev/ion-sfu/pkg/sfu"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/sourcegraph/jsonrpc2"
 	websocketjsonrpc2 "github.com/sourcegraph/jsonrpc2/websocket"

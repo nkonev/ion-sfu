@@ -5,7 +5,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/pion/ion-sfu/pkg/sfu"
+	"github.com/nkonev/ion-sfu/pkg/sfu"
 )
 
 func KeepAlive(timeout time.Duration) func(next sfu.MessageProcessor) sfu.MessageProcessor {
