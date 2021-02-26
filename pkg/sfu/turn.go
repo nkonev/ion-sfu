@@ -31,14 +31,13 @@ type TurnAuth struct {
 
 // WebRTCConfig defines parameters for ice
 type TurnConfig struct {
-	Enabled bool     `mapstructure:"enabled"`
-	Realm   string   `mapstructure:"realm"`
-	Address string   `mapstructure:"address"`
-	Cert    string   `mapstructure:"cert"`
-	Key     string   `mapstructure:"key"`
-	Auth    TurnAuth `mapstructure:"auth"`
-	MinPort uint16   `mapstructure:"minport"`
-	MaxPort uint16   `mapstructure:"maxport"`
+	Enabled   bool     `mapstructure:"enabled"`
+	Realm     string   `mapstructure:"realm"`
+	Address   string   `mapstructure:"address"`
+	Cert      string   `mapstructure:"cert"`
+	Key       string   `mapstructure:"key"`
+	Auth      TurnAuth `mapstructure:"auth"`
+	PortRange []uint16 `mapstructure:"portrange"`
 }
 
 func InitTurnServer(conf TurnConfig, auth func(username, realm string, srcAddr net.Addr) ([]byte, bool)) (*turn.Server, error) {
@@ -61,17 +60,12 @@ func InitTurnServer(conf TurnConfig, auth func(username, realm string, srcAddr n
 
 	addr := strings.Split(conf.Address, ":")
 
-	var minPort uint16
-	var maxPort uint16
-	if conf.MinPort > 0 {
-		minPort = conf.MinPort
-	} else {
-		minPort = turnMinPort
-	}
-	if conf.MaxPort > 0 {
-		maxPort = conf.MaxPort
-	} else {
-		maxPort = turnMaxPort
+	var minPort uint16 = turnMinPort
+	var maxPort uint16 = turnMaxPort
+
+	if len(conf.PortRange) == 2 {
+		minPort = conf.PortRange[0]
+		maxPort = conf.PortRange[1]
 	}
 
 	if len(conf.Cert) > 0 && len(conf.Key) > 0 {
