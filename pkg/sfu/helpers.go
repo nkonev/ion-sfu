@@ -5,7 +5,7 @@ import (
 	"strings"
 	"sync/atomic"
 
-	"github.com/pion/ion-sfu/pkg/buffer"
+	"github.com/nkonev/ion-sfu/pkg/buffer"
 	"github.com/pion/webrtc/v3"
 )
 

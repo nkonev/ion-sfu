@@ -8,8 +8,8 @@ import (
 
 	"github.com/pion/ice/v2"
 	log "github.com/pion/ion-log"
-	"github.com/pion/ion-sfu/pkg/buffer"
-	"github.com/pion/ion-sfu/pkg/stats"
+	"github.com/nkonev/ion-sfu/pkg/buffer"
+	"github.com/nkonev/ion-sfu/pkg/stats"
 	"github.com/pion/turn/v2"
 	"github.com/pion/webrtc/v3"
 )

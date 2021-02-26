@@ -7,7 +7,7 @@ import (
 	"time"
 
 	log "github.com/pion/ion-log"
-	"github.com/pion/ion-sfu/pkg/buffer"
+	"github.com/nkonev/ion-sfu/pkg/buffer"
 	"github.com/pion/rtcp"
 	"github.com/pion/transport/packetio"
 	"github.com/pion/webrtc/v3"

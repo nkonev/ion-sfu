@@ -8,8 +8,8 @@ import (
 
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	log "github.com/pion/ion-log"
-	pb "github.com/pion/ion-sfu/cmd/signal/grpc/proto"
-	"github.com/pion/ion-sfu/pkg/sfu"
+	pb "github.com/nkonev/ion-sfu/cmd/signal/grpc/proto"
+	"github.com/nkonev/ion-sfu/pkg/sfu"
 	"github.com/soheilhy/cmux"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
