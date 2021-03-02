@@ -56,7 +56,10 @@ func (b *Bucket) getPacket(buf []byte, sn uint16) (i int, err error) {
 }
 
 func (b *Bucket) push(pkt []byte) []byte {
-	binary.BigEndian.PutUint16(b.buf[b.step*maxPktSize:], uint16(len(pkt)))
+	bytes := b.buf[b.step*maxPktSize:]
+	if len(bytes) >= 2 {
+		binary.BigEndian.PutUint16(bytes, uint16(len(pkt)))
+	}
 	off := b.step*maxPktSize + 2
 	copy(b.buf[off:], pkt)
 	b.step++
