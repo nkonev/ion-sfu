@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/pion/ion-sfu/pkg/middlewares/datachannel"
+	"github.com/nkonev/ion-sfu/pkg/middlewares/datachannel"
 
-	log "github.com/pion/ion-sfu/pkg/logger"
-	"github.com/pion/ion-sfu/pkg/sfu"
+	log "github.com/nkonev/ion-sfu/pkg/logger"
+	"github.com/nkonev/ion-sfu/pkg/sfu"
 	"github.com/spf13/viper"
 
-	"github.com/pion/ion-sfu/cmd/signal/grpc/server"
+	"github.com/nkonev/ion-sfu/cmd/signal/grpc/server"
 )
 
 type grpcConfig struct {

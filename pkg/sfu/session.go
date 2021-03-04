@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/pion/ion-sfu/pkg/buffer"
+	"github.com/nkonev/ion-sfu/pkg/buffer"
 	"github.com/pion/webrtc/v3"
 )
 

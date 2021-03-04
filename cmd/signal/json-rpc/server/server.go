@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"github.com/go-logr/logr"
-	"github.com/pion/ion-sfu/pkg/sfu"
+	"github.com/nkonev/ion-sfu/pkg/sfu"
 	"github.com/pion/webrtc/v3"
 	"github.com/sourcegraph/jsonrpc2"
 )
